@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF since we use JWT
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/public").permitAll()  // Public routes
-                        .requestMatchers("/api/private").authenticated()  // Protected routes
+                        .requestMatchers("/api/private","/api/jobs/**").authenticated()  // Protected routes
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight requests
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No session, JWT only

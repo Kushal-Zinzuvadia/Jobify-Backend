@@ -4,6 +4,8 @@ import org.example.jobify.model.Job;
 import org.example.jobify.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -31,8 +33,10 @@ public class JobController {
             @RequestParam(required = false, defaultValue = "full-time") String jobType,
             @RequestParam(required = false, defaultValue = "entry") String experience,
             @RequestParam(required = false, defaultValue = "") String salaryRange,
-            @RequestParam(required = false, defaultValue = "1") int page
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @AuthenticationPrincipal Jwt jwt
     ) {
+        System.out.println("Received Token: " + jwt.getTokenValue());
         List<Job> jobs = jobService.getFilteredJobs(searchTerm, location, jobType, experience, salaryRange, page);
 
         Map<String, Object> response = new HashMap<>();
