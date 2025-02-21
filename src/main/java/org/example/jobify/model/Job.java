@@ -1,9 +1,7 @@
 package org.example.jobify.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.util.UUID;
 
 @Entity
 public class Job {
@@ -21,76 +19,38 @@ public class Job {
     private String description;
     private String requirements;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "employer_id", nullable = false)
+    private User employer;  // Reference to User entity
+
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getJobTitle() { return jobTitle; }
+    public void setJobTitle(String jobTitle) { this.jobTitle = jobTitle; }
 
-    public String getJobTitle() {
-        return jobTitle;
-    }
+    public String getCompany() { return company; }
+    public void setCompany(String company) { this.company = company; }
 
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
-    }
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
 
-    public String getCompany() {
-        return company;
-    }
+    public String getSalary() { return salary; }
+    public void setSalary(String salary) { this.salary = salary; }
 
-    public void setCompany(String company) {
-        this.company = company;
-    }
+    public String getJobType() { return jobType; }
+    public void setJobType(String jobType) { this.jobType = jobType; }
 
-    public String getLocation() {
-        return location;
-    }
+    public String getExperience() { return experience; }
+    public void setExperience(String experience) { this.experience = experience; }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getSalary() {
-        return salary;
-    }
+    public String getRequirements() { return requirements; }
+    public void setRequirements(String requirements) { this.requirements = requirements; }
 
-    public void setSalary(String salary) {
-        this.salary = salary;
-    }
-
-    public String getJobType() {
-        return jobType;
-    }
-
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
-    }
-
-    public String getExperience() {
-        return experience;
-    }
-
-    public void setExperience(String experience) {
-        this.experience = experience;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getRequirements() {
-        return requirements;
-    }
-
-    public void setRequirements(String requirements) {
-        this.requirements = requirements;
-    }
+    public User getEmployer() { return employer; }
+    public void setEmployer(User employer) { this.employer = employer; }
 }
