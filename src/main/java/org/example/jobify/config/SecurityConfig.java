@@ -62,6 +62,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF since JWT is stateless
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/jobs").hasAuthority("EMPLOYER")
+                        .requestMatchers(HttpMethod.GET, "/api/jobs").hasAuthority("SCOPE_read:jobs") // Secure GET /api/jobs
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow CORS preflight requests
                         .requestMatchers("/api/public").permitAll()  // Public routes
                         .requestMatchers("/api/private", "/api/jobs/**")
@@ -79,8 +80,8 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles"); // Change based on your JWT claim name
-        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope"); // Ensure scope claims are extracted
+        grantedAuthoritiesConverter.setAuthorityPrefix("SCOPE_"); // Prefix scope claims with 'SCOPE_'
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);

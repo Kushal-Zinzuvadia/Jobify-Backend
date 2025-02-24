@@ -4,6 +4,7 @@ import org.example.jobify.model.Job;
 import org.example.jobify.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,8 @@ public class JobController {
         return ResponseEntity.ok(createdJob);
     }
 
-    @GetMapping
+    @PreAuthorize("hasAuthority('SCOPE_read:jobs')")
+    @GetMapping()
     public ResponseEntity<Map<String, Object>> getJobs(
             @RequestParam(required = false, defaultValue = "") String searchTerm,
             @RequestParam(required = false, defaultValue = "") String location,
