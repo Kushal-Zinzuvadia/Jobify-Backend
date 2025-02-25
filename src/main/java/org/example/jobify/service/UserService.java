@@ -10,6 +10,7 @@ import org.example.jobify.repository.RoleRepository;
 import org.example.jobify.repository.UserRepository;
 import org.example.jobify.utilities.ApiException;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,18 +28,23 @@ public class UserService {
 
     private UserRepository userRepository;
 
-    private final MyUserDetailsRepository myUserDetailsRepository;
+    private MyUserDetailsRepository myUserDetailsRepository;
 
-    private final AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Lazy
     private JwtService jwtService;
 
-    private final RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
-    private final EmailService emailService;
+    private EmailService emailService;
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
