@@ -1,6 +1,5 @@
 package org.example.jobify.service;
 
-
 import org.example.jobify.model.User;
 import org.example.jobify.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+        return (UserDetails) userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
     }
 
