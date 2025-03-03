@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/jobs")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
 public class JobController {
 
     @Autowired
     private JobService jobService;
 
-    @PostMapping
+    @PostMapping("/jobs")
     public ResponseEntity<Job> createJob(@RequestBody Job job) {
         Job createdJob = jobService.saveJob(job);
         return ResponseEntity.ok(createdJob);
@@ -35,10 +35,10 @@ public class JobController {
             @RequestParam(required = false, defaultValue = "full-time") String jobType,
             @RequestParam(required = false, defaultValue = "entry") String experience,
             @RequestParam(required = false, defaultValue = "") String salaryRange,
-            @RequestParam(required = false, defaultValue = "1") int page,
-            @AuthenticationPrincipal Jwt jwt
+            @RequestParam(required = false, defaultValue = "1") int page
+//            @AuthenticationPrincipal Jwt jwt
     ) {
-        System.out.println("Received Token: " + jwt.getTokenValue());
+//        System.out.println("Received Token: " + jwt.getTokenValue());
         List<Job> jobs = jobService.getFilteredJobs(searchTerm, location, jobType, experience, salaryRange, page);
 
         Map<String, Object> response = new HashMap<>();

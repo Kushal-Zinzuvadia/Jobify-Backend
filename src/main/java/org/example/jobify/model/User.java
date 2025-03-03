@@ -34,8 +34,8 @@ public class User {
     @NotNull(message = "Password can't be null")
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private RoleName roleName; // JOB_SEEKER, EMPLOYER
+    @Column(name = "role_name", nullable = false)
+    private String roleName; // JOB_SEEKER, EMPLOYER
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -43,11 +43,12 @@ public class User {
     @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Job> jobs;
 
+//    @JsonIgnore
+//    private String verificationToken;  // To store the email verification token
+//
     @JsonIgnore
-    private String verificationToken;  // To store the email verification token
-
-    @JsonIgnore
-    private boolean verified;  // To check if the user is verified
+    @Column(nullable = false)
+    private boolean verified = false;  // To check if the user is verified
 
     @Setter
     @Getter

@@ -59,23 +59,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable()) // Disable CSRF since JWT is stateless
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/jobs").hasAuthority("EMPLOYER")
-                        .requestMatchers(HttpMethod.GET, "/api/jobs").hasAuthority("SCOPE_read:jobs") // Secure GET /api/jobs
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow CORS preflight requests
-                        .requestMatchers("/api/public").permitAll()  // Public routes
-                        .requestMatchers("/api/private", "/api/jobs/**")
-                        .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")  // Ensure roles are required
-                        .anyRequest().authenticated() // Secure all other endpoints
+                        .anyRequest().permitAll() // ✅ Allow all requests without authentication
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No session, JWT only
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
-                        jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()) // Validate JWT tokens
-                ));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
+
+
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {

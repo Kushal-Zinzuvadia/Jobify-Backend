@@ -112,7 +112,7 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
 
         //Put role in claims
-        claims.put("role", user.getRoleName().name());
+//        claims.put("role", user.getRoleName().name());
 
         return Jwts.builder()
                 .claims()

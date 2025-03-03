@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class UserController {
     @Lazy
     private UserService userService;
 
-    @PostMapping("/register")
+    @PostMapping(path = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> register(@Valid @RequestBody User user) {
         try {
             User registeredUser = this.userService.registerUser(user);
@@ -53,31 +54,32 @@ public class UserController {
         }
     }
 
-    @PostMapping("/verify")
-    public ResponseEntity<ApiResponse> verify(@RequestBody OtpDto otpDto){
-        try {
-            // Verify the user and generate a JWT token
-            System.out.println(otpDto.getOtp());
-            Map<String,Object> verifyResponse= userService.verifyUserEmail(otpDto.getOtp());
-            System.out.println(verifyResponse);
-            User currentUser = (User) (verifyResponse.get("user"));
-            String jwtToken = (String) verifyResponse.get("jwtToken");
-            // Prepare response with JWT token in the header and user data in the body
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + jwtToken);
-            System.out.println(jwtToken);
-            ApiResponse response = new ApiResponse(200, currentUser, "Email verified successfully.");
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(response);
-        } catch (ApiException e) {
-            // Handle API exceptions (Invalid/expired token)
-            return ResponseEntity.status(e.getStatusCode()).body(new ApiResponse(e.getStatusCode(), null, e.getMessage()));
-        } catch (Exception e) {
-            // Catch any other unexpected exceptions
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), null, "An unexpected error occurred: " + e.getMessage()));
-        }
-    }
+//    @PostMapping("/verify")
+//    public ResponseEntity<ApiResponse> verify(@RequestBody OtpDto otpDto){
+//        try {
+//            // Verify the user and generate a JWT token
+//            System.out.println(otpDto.getOtp());
+////            Map<String,Object> verifyResponse= userService.verifyUserEmail(otpDto.getOtp());
+//            System.out.println(verifyResponse);
+//            User currentUser = (User) (verifyResponse.get("user"));
+//            String jwtToken = (String) verifyResponse.get("jwtToken");
+//            // Prepare response with JWT token in the header and user data in the body
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.set("Authorization", "Bearer " + jwtToken);
+//            System.out.println(jwtToken);
+//            ApiResponse response = new ApiResponse(200, currentUser, "Email verified successfully.");
+//            return ResponseEntity.ok()
+//                    .headers(headers)
+//                    .body(response);
+//        } catch (ApiException e) {
+//            // Handle API exceptions (Invalid/expired token)
+//            return ResponseEntity.status(e.getStatusCode()).body(new ApiResponse(e.getStatusCode(), null, e.getMessage()));
+//        } catch (Exception e) {
+//            // Catch any other unexpected exceptions
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), null, "An unexpected error occurred: " + e.getMessage()));
+//        }
+//    }
+
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody User user){
         try {
@@ -122,19 +124,19 @@ public class UserController {
     }
 
     // 2. Set User Role
-    @PostMapping("/set-role")
-    public ResponseEntity<?> setUserRole(@RequestBody UserRoleRequest request) {
-        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
-
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-
-        User user = userOptional.get();
-        user.setRoleName(RoleName.valueOf(request.getRole()));
-        userRepository.save(user);
-        return ResponseEntity.ok("Role updated successfully");
-    }
+//    @PostMapping("/set-role")
+//    public ResponseEntity<?> setUserRole(@RequestBody UserRoleRequest request) {
+//        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
+//
+//        if (userOptional.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+//        }
+//
+//        User user = userOptional.get();
+//        user.setRoleName(RoleName.valueOf(request.getRole()));
+//        userRepository.save(user);
+//        return ResponseEntity.ok("Role updated successfully");
+//    }
 
     // 3. Get Applications for a Specific Job (For Employers)
     @GetMapping("/job/{jobId}/applicants")
