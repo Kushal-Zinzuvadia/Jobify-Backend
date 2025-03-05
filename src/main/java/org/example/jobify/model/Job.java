@@ -1,10 +1,13 @@
 package org.example.jobify.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -29,4 +32,8 @@ public class Job {
 
     @Column(name = "employer_id", unique = false, nullable = false)
     private UUID employerId;
+
+    @ManyToMany(mappedBy = "jobs")
+//    @JsonManagedReference
+    private List<User> users = new ArrayList<>();
 }

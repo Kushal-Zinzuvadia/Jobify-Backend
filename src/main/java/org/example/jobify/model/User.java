@@ -1,5 +1,6 @@
 package org.example.jobify.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -8,8 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,15 +39,19 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Job> jobs;
+    @ManyToMany
+    @JoinTable(
+            name = "users_jobs",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "job_id")
+    )
+    @JsonIgnore
+//    @JsonBackReference
+    private List<Job> jobs = new ArrayList<>();
 
-//    @JsonIgnore
-//    private String verificationToken;  // To store the email verification token
-//
     @JsonIgnore
     @Column(nullable = false)
-    private boolean verified = false;  // To check if the user is verified
+    private boolean verified = false;
 
     @Setter
     @Getter

@@ -3,9 +3,11 @@ package org.example.jobify.controller;
 import jakarta.validation.Valid;
 import org.example.jobify.dtos.OtpDto;
 import org.example.jobify.model.Application;
+import org.example.jobify.model.Job;
 import org.example.jobify.model.RoleName;
 import org.example.jobify.model.User;
 import org.example.jobify.repository.ApplicationRepository;
+import org.example.jobify.repository.JobRepository;
 import org.example.jobify.repository.UserRepository;
 import org.example.jobify.request.UserRoleRequest;
 import org.example.jobify.service.UserService;
@@ -33,6 +35,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -160,4 +165,40 @@ public class UserController {
         }
         return ResponseEntity.ok(applications);
     }
+
+    @PostMapping("/user/{userId}/apply/{jobId}")
+    public ResponseEntity<?> applyJob(@PathVariable UUID userId, @PathVariable UUID jobId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<Job> jobOptional = jobRepository.findById(jobId);
+
+        if (userOptional.isPresent() && jobOptional.isPresent()) {
+            User user = userOptional.get();
+            Job job = jobOptional.get();
+
+            // Add job to user's job set
+            user.getJobs().add(job);
+
+            // Add user to job's user set
+            job.getUsers().add(user);
+
+            // Save both entities
+            userRepository.save(user);
+            jobRepository.save(job); // Ensure both sides persist
+
+            return ResponseEntity.ok("Job application successful.");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or Job not found.");
+    }
+
+    @DeleteMapping("/user/{userId}/withdraw/{jobId}")
+    public ResponseEntity<?> withdrawApplication(@PathVariable UUID userId, @PathVariable UUID jobId) {
+        userService.withdrawApplication(userId, jobId);
+        return ResponseEntity.ok("Application withdrawn successfully");
+    }
+
+    @GetMapping("/user/{userId}/jobs")
+    public List<Job> getJobsByUser(@PathVariable UUID userId) {
+        return userService.getJobsByUser(userId);
+    }
+
 }

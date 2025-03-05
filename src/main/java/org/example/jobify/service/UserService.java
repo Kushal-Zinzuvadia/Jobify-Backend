@@ -1,10 +1,8 @@
 package org.example.jobify.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.jobify.model.Role;
-import org.example.jobify.model.RoleName;
-import org.example.jobify.model.User;
-import org.example.jobify.model.UserPrincipal;
+import org.example.jobify.model.*;
+import org.example.jobify.repository.JobRepository;
 import org.example.jobify.repository.MyUserDetailsRepository;
 import org.example.jobify.repository.RoleRepository;
 import org.example.jobify.repository.UserRepository;
@@ -33,12 +31,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-//    private MyUserDetailsRepository myUserDetailsRepository;
+    @Autowired
+    private JobRepository jobRepository;
 
     private AuthenticationManager authenticationManager;
-
-//    @Lazy
-//    private JwtService jwtService;
 
     private RoleRepository roleRepository;
 
@@ -50,14 +46,12 @@ public class UserService {
     public UserService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
-    //    private EmailService emailService;
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
-
 
     public User registerUser(@RequestBody User user) throws ApiException, MailAuthenticationException {
         User registeredUser;
@@ -86,6 +80,7 @@ public class UserService {
         registeredUser = this.userRepository.save(user);
         return registeredUser;
     }
+
     // Send verification email
 
 //    public Map<String,Object> verifyUserEmail(String token) throws ApiException {
@@ -109,9 +104,6 @@ public class UserService {
 //        }
 //    }
 
-
-
-
     public String login(User user) throws ApiException , BadCredentialsException {
         System.out.println("login service");
         // Attempt to authenticate the user using the authentication manager
@@ -131,5 +123,61 @@ public class UserService {
 //            throw new ApiException("Authentication failed", 401);
 //        }
         return "Sample token";
+    }
+
+    // 1. Apply for a job
+    public void applyToJob(UUID userId, UUID jobId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
+
+        user.getJobs().add(job);
+        job.getUsers().add(user);
+
+        userRepository.save(user);
+        jobRepository.save(job);
+    }
+
+    // 2. Withdraw application
+    public void withdrawApplication(UUID userId, UUID jobId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
+
+        user.getJobs().remove(job);
+        job.getUsers().remove(user);
+
+        userRepository.save(user);
+        jobRepository.save(job);
+    }
+
+    // 3. Get jobs applied by a user
+    public List<Job> getJobsByUser(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getJobs();
+    }
+
+    // 11. Get all users
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    // 12. Get user by ID
+    public User getUserById(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    // 13. Create a user
+    public User createUser(User user) {
+        return userRepository.save(user);
+    }
+
+    // 14. Delete a user
+    public void deleteUser(UUID userId) {
+        userRepository.deleteById(userId);
     }
 }
