@@ -5,8 +5,6 @@ import org.example.jobify.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,12 +21,15 @@ public class JobController {
 
     @PostMapping("/jobs")
     public ResponseEntity<Job> createJob(@RequestBody Job job) {
+        System.out.println("Creating job");
         Job createdJob = jobService.saveJob(job);
+        System.out.println("Generated Job ID: " + createdJob.getId()); // Now the ID will be present
         return ResponseEntity.ok(createdJob);
     }
 
+
     @PreAuthorize("hasAuthority('SCOPE_read:jobs')")
-    @GetMapping()
+    @GetMapping("/jobs")
     public ResponseEntity<Map<String, Object>> getJobs(
             @RequestParam(required = false, defaultValue = "") String searchTerm,
             @RequestParam(required = false, defaultValue = "") String location,

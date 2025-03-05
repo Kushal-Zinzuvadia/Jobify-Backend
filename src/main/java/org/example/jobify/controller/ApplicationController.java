@@ -41,7 +41,7 @@ public class ApplicationController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Job not found"));
 
         // Ensure only the employer who posted the job can view applicants
-        if (!job.getEmployer().getId().equals(employer.getId())) {
+        if (!job.getEmployerId().equals(employer.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only view applicants for your own jobs.");
         }
 

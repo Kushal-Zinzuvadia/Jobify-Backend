@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -140,7 +141,7 @@ public class UserController {
 
     // 3. Get Applications for a Specific Job (For Employers)
     @GetMapping("/job/{jobId}/applicants")
-    public ResponseEntity<?> getApplicantsForJob(@PathVariable Long jobId) {
+    public ResponseEntity<?> getApplicantsForJob(@PathVariable UUID jobId) {
         List<Application> applications = applicationRepository.findByJobId(jobId);
 
         if (applications.isEmpty()) {

@@ -18,10 +18,23 @@ public class JobService {
     private UserRepository userRepository;
 
     public Job saveJob(Job job) {
-        User employer= userRepository.findById(job.getEmployer().getId()).orElseThrow(() -> new RuntimeException("Employer not found with ID: " + job.getEmployer().getId()));
-        job.setEmployer(employer);
-        return jobRepository.save(job);
+        System.out.println("Saving job");
+
+        // Ensure employer exists
+        User employer = userRepository.findById(job.getEmployerId())
+                .orElseThrow(() -> new RuntimeException("Employer not found with ID: " + job.getEmployerId()));
+
+        System.out.println(job.getEmployerId());
+
+        // Save job entity
+        Job savedJob = jobRepository.save(job); // ID gets generated here
+
+        System.out.println("Saved Job ID: " + savedJob.getId()); // Now it will have a value
+
+        return savedJob;
     }
+
+
 
     public List<Job> getFilteredJobs(String searchTerm, String location, String jobType, String experience, String salaryRange, int page) {
         // TODO: Add filtering logic (search by criteria from DB)
