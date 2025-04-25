@@ -175,10 +175,8 @@ public class UserController {
             User user = userOptional.get();
             Job job = jobOptional.get();
 
-            // Add job to user's job set
             user.getJobs().add(job);
 
-            // Add user to job's user set
             job.getUsers().add(user);
 
             // Save both entities
