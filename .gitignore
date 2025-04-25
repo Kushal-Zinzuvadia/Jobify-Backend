@@ -23,5 +23,5 @@
 hs_err_pid*
 replay_pid*
 
-secrets.properties
+src/main/resources/secrets.properties
 auth0.properties
