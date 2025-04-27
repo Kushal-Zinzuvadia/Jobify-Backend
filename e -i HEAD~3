@@ -1,0 +1,17 @@
+[33mcommit 25a844aa6d40ff8b6b649ff43a3680deed6d19a0[m
+Author: Kushal-Zinzuvadia <128955646+Kushal-Zinzuvadia@users.noreply.github.com>
+Date:   Fri Apr 25 23:34:54 2025 +0530
+
+    Remove secrets.properties from repo
+
+[33mcommit c82f4f2187d971824f2f35cbcb97e9c18fcf6b54[m
+Author: Kushal-Zinzuvadia <128955646+Kushal-Zinzuvadia@users.noreply.github.com>
+Date:   Fri Apr 25 23:32:24 2025 +0530
+
+    gitignore and properties
+
+[33mcommit 33b2667c078b67e35f8ad21440970d521ec1cd87[m
+Author: Kushal-Zinzuvadia <128955646+Kushal-Zinzuvadia@users.noreply.github.com>
+Date:   Tue Feb 25 17:03:31 2025 +0530
+
+    services, DTOs, role-based auth
