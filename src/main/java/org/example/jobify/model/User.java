@@ -43,7 +43,8 @@ public class User {
     @JoinTable(
             name = "users_jobs",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "job_id")
+            inverseJoinColumns = @JoinColumn(name = "job_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "job_id"})
     )
     @JsonIgnore
 //    @JsonBackReference
