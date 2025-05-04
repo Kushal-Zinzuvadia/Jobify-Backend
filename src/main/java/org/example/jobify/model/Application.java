@@ -2,6 +2,7 @@ package org.example.jobify.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.context.annotation.Lazy;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "applications", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"job_id", "user_id"})
 })
+@Lazy
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
