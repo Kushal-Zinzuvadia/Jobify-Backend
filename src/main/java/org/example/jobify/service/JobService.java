@@ -69,4 +69,18 @@ public class JobService {
     public List<Job> getPostings(UUID employerId) {
         return jobRepository.findByEmployerId(employerId);
     }
+
+    public Job updateJob(UUID jobId, Job jobDetails) {
+        Job existingJob = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
+
+        existingJob.setLocation(jobDetails.getLocation());
+        existingJob.setSalary(jobDetails.getSalary());
+        existingJob.setDescription(jobDetails.getDescription());
+        existingJob.setRequirements(jobDetails.getRequirements());
+        existingJob.setExperience(jobDetails.getExperience());
+        existingJob.setJobType(jobDetails.getJobType());
+
+        return jobRepository.save(existingJob);
+    }
 }

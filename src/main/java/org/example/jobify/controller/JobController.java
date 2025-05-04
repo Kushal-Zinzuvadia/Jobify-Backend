@@ -4,14 +4,12 @@ import org.example.jobify.model.Job;
 import org.example.jobify.model.User;
 import org.example.jobify.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/jobs")
@@ -57,4 +55,23 @@ public class JobController {
     public List<Job> getPostedJobs(@PathVariable UUID employerId) {
         return jobService.getPostings(employerId);
     }
+
+    @DeleteMapping("/{jobId}")
+    public void deleteJob(@PathVariable UUID jobId) {
+        jobService.deleteJob(jobId);
+    }
+
+    @PutMapping("/{jobId}")
+    public ResponseEntity<?> updateJob(@PathVariable UUID jobId, @RequestBody Job jobDetails) {
+        Optional<Job> optionalJob = Optional.ofNullable(jobService.getJobById(jobId));
+
+        if (optionalJob.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Job with ID " + jobId + " not found.");
+        }
+
+        Job updatedJob = jobService.updateJob(jobId, jobDetails);
+        return ResponseEntity.ok(updatedJob);
+    }
+
 }

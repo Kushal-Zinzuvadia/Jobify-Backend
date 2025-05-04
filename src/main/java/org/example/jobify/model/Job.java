@@ -34,6 +34,5 @@ public class Job {
     private UUID employerId;
 
     @ManyToMany(mappedBy = "jobs")
-//    @JsonManagedReference
     private List<User> users = new ArrayList<>();
 }
