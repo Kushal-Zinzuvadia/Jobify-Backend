@@ -1,5 +1,6 @@
 package org.example.jobify.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,5 +35,6 @@ public class Job {
     private UUID employerId;
 
     @ManyToMany(mappedBy = "jobs")
+    @JsonIgnore
     private List<User> users = new ArrayList<>();
 }
